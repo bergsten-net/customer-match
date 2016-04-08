@@ -62,4 +62,3 @@ if( isset($_POST) ){
         header('location: ' . $_SERVER['HTTP_REFERER']);
     }
 }
-

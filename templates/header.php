@@ -3,8 +3,7 @@ $client_ip = $_SERVER['REMOTE_ADDR'];
 $server_ip = $_SERVER['SERVER_ADDR'];
 
 function pr($array, $title = 'Array') {
-    global $client_ip;
-    global $server_ip;
+    global $client_ip, $server_ip;
     
     if(strcmp($server_ip, $client_ip) === 0) {
         echo($title . ':<pre>');
