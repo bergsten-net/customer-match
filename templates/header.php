@@ -1,3 +1,17 @@
+<?php 
+$client_ip = $_SERVER['REMOTE_ADDR'];
+$server_ip = $_SERVER['SERVER_ADDR'];
+
+function pr($array, $title = 'Array') {
+    global $client_ip;
+    global $server_ip;
+    
+    if(strcmp($server_ip, $client_ip) === 0) {
+        echo($title . ':<pre>');
+        print_r($array);
+        echo('</pre>');
+    }
+} ?>
 <!doctype html>
 <html class="no-js" lang="">
     <head>
@@ -22,13 +36,6 @@
         <div class="header-container">
             <header class="wrapper clearfix">
                 <h1 class="title">Customer Match</h1>
-                <nav>
-                    <ul>
-                        <li><a href="#">nav ul li a</a></li>
-                        <li><a href="#">nav ul li a</a></li>
-                        <li><a href="#">nav ul li a</a></li>
-                    </ul>
-                </nav>
             </header>
         </div>
 

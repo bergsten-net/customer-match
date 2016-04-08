@@ -1,82 +1,57 @@
 <?php
+// From http://code.tutsplus.com/tutorials/build-a-neat-html5-powered-contact-form--net-20426
 if( isset($_POST) ){
-     
     //form validation vars
     $formok = true;
     $errors = array();
      
     //submission data
-    $ipaddress = $_SERVER['REMOTE_ADDR'];
-    $date = date('d/m/Y');
-    $time = date('H:i:s');
-     
+    $date = date('Y-m-d');
+    $time = date('H-i-s');
+    $write_filename = 'files/customer-match-' . $date . '-' . $time . '.csv';
+    
     //form data
-    $name = $_POST['name'];    
-    $email = $_POST['email'];
-    $telephone = $_POST['telephone'];
-    $enquiry = $_POST['enquiry'];
-    $message = $_POST['message'];
-     
-    //validate form data
-     
+    $file = $_POST['file'];
+
     //validate name is not empty
-    if(empty($name)){
+    if(empty($file)){
         $formok = false;
-        $errors[] = "You have not entered a name";
+        $errors[] = "You have not selected any file";
     }
-     
-    //validate email address is not empty
-    if(empty($email)){
-        $formok = false;
-        $errors[] = "You have not entered an email address";
-    //validate email address is valid
-    }elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)){
-        $formok = false;
-        $errors[] = "You have not entered a valid email address";
+    
+    if(($readfp = fopen($file, 'r')) !== false) {
+        // get the first row, which contains the column-titles (if necessary)
+        $header = fgetcsv($readfp);
+        
+        $writefp = fopen($write_filename, 'w');
+        
+        // loop through the file line-by-line
+        while(($data = fgetcsv($readfp)) !== false) {
+            $sha256_data = hash('sha256', $data[0]);
+            
+            fputcsv($writefp, array($sha256_data));
+            // resort/rewrite data and insert into DB here
+            // try to use conditions sparingly here, as those will cause slow-performance
+
+            // I don't know if this is really necessary, but it couldn't harm;
+            // see also: http://php.net/manual/en/features.gc.php
+            unset($data);
+        }
+        
+        fclose($writefp);
+        fclose($readfp);
     }
-     
-    //validate message is not empty
-    if(empty($message)){
-        $formok = false;
-        $errors[] = "You have not entered a message";
-    }
-    //validate message is greater than 20 characters
-    elseif(strlen($message) < 20){
-        $formok = false;
-        $errors[] = "Your message must be greater than 20 characters";
-    }
-     
-    //send email if all is ok
-    if($formok){
-        $headers = "From: info@example.com" . "\r\n";
-        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-         
-        $emailbody = "<p>You have received a new message from the enquiries form on your website.</p>
-                      <p><strong>Name: </strong> {$name} </p>
-                      <p><strong>Email Address: </strong> {$email} </p>
-                      <p><strong>Telephone: </strong> {$telephone} </p>
-                      <p><strong>Enquiry: </strong> {$enquiry} </p>
-                      <p><strong>Message: </strong> {$message} </p>
-                      <p>This message was sent from the IP Address: {$ipaddress} on {$date} at {$time}</p>";
-         
-        mail("enquiries@example.com","New Enquiry",$emailbody,$headers);
-         
-    }
-     
+    
     //what we need to return back to our form
     $returndata = array(
         'posted_form_data' => array(
-            'name' => $name,
-            'email' => $email,
-            'telephone' => $telephone,
-            'enquiry' => $enquiry,
-            'message' => $message
+            'file' => $file,
+            'write_filename' => $write_filename
         ),
         'form_ok' => $formok,
         'errors' => $errors
     );
-         
-     
+    
     //if this is not an ajax request
     if(empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest'){
         //set session variables
@@ -87,3 +62,4 @@ if( isset($_POST) ){
         header('location: ' . $_SERVER['HTTP_REFERER']);
     }
 }
+

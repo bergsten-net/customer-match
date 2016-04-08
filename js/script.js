@@ -1,5 +1,4 @@
 $(function(){
-
     //set global variables and cache DOM elements for reuse later
     var form = $('#contact-form').find('form'),
         formElements = form.find('input[type!="submit"],textarea'),
@@ -15,7 +14,6 @@ $(function(){
     
     //feature detection + polyfills
     formElements.each(function(){
-
         //if HTML5 input placeholder attribute is not supported
         if(!Modernizr.input.placeholder){
             var placeholderText = this.getAttribute('placeholder');
@@ -41,10 +39,9 @@ $(function(){
         }
         
         //if HTML5 input autofocus attribute is not supported
-        if(!Modernizr.input.autofocus){
+        if(!Modernizr.input.autofocus) {
             if(this.getAttribute('autofocus')) this.focus();
         }
-        
     });
     
     //to ensure compatibility with HTML5 forms, we have to validate the form on submit button click event rather than form submit event. 
@@ -118,7 +115,6 @@ $(function(){
         
         //if form is not valid
         if(!formok){
-            
             //animate required field notice
             $('#req-field-desc')
                 .stop()
@@ -132,7 +128,6 @@ $(function(){
             
             //show error message 
             showNotice('error',errors);
-            
         }
         //if form is valid
         else {
@@ -150,13 +145,11 @@ $(function(){
         }
         
         return false; //this stops submission off the form and also stops browsers showing default error messages
-        
     });
 
     //other misc functions
-    function showNotice(type,data)
-    {
-        if(type == 'error'){
+    function showNotice(type,data) {
+        if(type == 'error') {
             successNotice.hide();
             errorNotice.find("li[id!='info']").remove();
             for(x in data){
@@ -173,5 +166,4 @@ $(function(){
     String.prototype.ucfirst = function() {
         return this.charAt(0).toUpperCase() + this.slice(1);
     }
-    
 });
