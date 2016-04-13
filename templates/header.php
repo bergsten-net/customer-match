@@ -1,16 +1,3 @@
-<?php 
-$client_ip = $_SERVER['REMOTE_ADDR'];
-$server_ip = $_SERVER['SERVER_ADDR'];
-
-function pr($array, $title = 'Array') {
-    global $client_ip, $server_ip;
-    
-    if(strcmp($server_ip, $client_ip) === 0) {
-        echo($title . ':<pre>');
-        print_r($array);
-        echo('</pre>');
-    }
-} ?>
 <!doctype html>
 <html class="no-js" lang="">
     <head>
@@ -26,7 +13,6 @@ function pr($array, $title = 'Array') {
         <link rel="stylesheet" href="css/form.css">
         
         <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
-        <script src="js/script.js"></script>
     </head>
     <body>
         <!--[if lt IE 8]>
