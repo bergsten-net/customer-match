@@ -1,35 +1,73 @@
 <?php
-// From http://code.tutsplus.com/tutorials/build-a-neat-html5-powered-contact-form--net-20426
+require_once('functions.php');
+
 if( isset($_POST) ){
     //form validation vars
     $formok = true;
     $errors = array();
-     
+    $successes = array();
+    
     //submission data
     $date = date('Y-m-d');
     $time = date('H-i-s');
+    $uploads_dir = __DIR__ . '/files/uploads/';
     $write_filename = 'files/customer-match-' . $date . '-' . $time . '.csv';
     
     //form data
-    $file = $_POST['file'];
-
+    $tmp_file = $_FILES['file']['tmp_name'];
+    $file = $_FILES['file']['name'];
+    
     //validate name is not empty
-    if(empty($file)){
+    if(empty($tmp_file)){
         $formok = false;
         $errors[] = "You have not selected any file";
     }
     
-    if(($readfp = fopen($file, 'r')) !== false) {
+    $result = copy($tmp_file, $uploads_dir . $file);
+    
+    if(FALSE === $result) {
+        $errors[] = "Error copying uploaded file.";
+    } else {
+        $successes[] = "Success copying uploaded file.";
+    }
+
+    if(($readfp = fopen($uploads_dir . $file, 'r')) !== false) {
         // Get the first row, which contains the column-titles (if necessary)
         $header = fgetcsv($readfp);
         
+        if(FALSE === $header) {
+            $errors[] = "Error reading first line of input file.";
+        } else {
+            $successes[] = "Success reading first line of input file.";
+        }
+        
         $writefp = fopen($write_filename, 'w');
         
-        // loop through the file line-by-line
+        if(FALSE === $writefp) {
+            $errors[] = "Error opening output file.";
+        } else {
+            $successes[] = "Success opening output file.";
+        }
+        
+        // Loop through the file line-by-line
+        $i = 0;
         while(($data = fgetcsv($readfp)) !== false) {
-            $sha256_data = hash('sha256', trim($data[0]));
-            fwrite($writefp, $sha256_data . PHP_EOL);
+            $i++;
+            if(FALSE === $data) {
+                $errors[] = "Error reading line of input file with fgetcsv().";
+            } else {
+                $successes[] = "Success writing first line to output file.";
+            }
             
+            $sha256_data = hash('sha256', trim($data[0]));
+            $result = fwrite($writefp, $sha256_data . PHP_EOL);
+            
+            if(FALSE === $result) {
+                $errors[] = "Error writing '" . $sha256_data . "' to output file.";
+            } else {
+                $successes[] = "Success writing '" . $sha256_data . "' to output file, line " . $i . ".";
+            }
+
             // resort/rewrite data and insert into DB here
             // try to use conditions sparingly here, as those will cause slow-performance
 
@@ -40,6 +78,11 @@ if( isset($_POST) ){
         
         fclose($writefp);
         fclose($readfp);
+    } else {
+        $errors[] = "Error opening input file '" . $file . "'.";
+        foreach(error_get_last() as $last_error) {
+            $errors[] = $last_error;
+        }
     }
     
     //what we need to return back to our form
@@ -49,7 +92,10 @@ if( isset($_POST) ){
             'write_filename' => $write_filename
         ),
         'form_ok' => $formok,
-        'errors' => $errors
+        'errors' => $errors,
+        '_POST' => $_POST,
+        '_FILES' => $_FILES,
+        //'successes' => $successes
     );
     
     //if this is not an ajax request
@@ -62,4 +108,3 @@ if( isset($_POST) ){
         header('location: ' . $_SERVER['HTTP_REFERER']);
     }
 }
-
