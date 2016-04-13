@@ -20,16 +20,16 @@ if( isset($_POST) ){
     }
     
     if(($readfp = fopen($file, 'r')) !== false) {
-        // get the first row, which contains the column-titles (if necessary)
+        // Get the first row, which contains the column-titles (if necessary)
         $header = fgetcsv($readfp);
         
         $writefp = fopen($write_filename, 'w');
         
         // loop through the file line-by-line
         while(($data = fgetcsv($readfp)) !== false) {
-            $sha256_data = hash('sha256', $data[0]);
+            $sha256_data = hash('sha256', trim($data[0]));
+            fwrite($writefp, $sha256_data . PHP_EOL);
             
-            fputcsv($writefp, array($sha256_data));
             // resort/rewrite data and insert into DB here
             // try to use conditions sparingly here, as those will cause slow-performance
 
@@ -62,3 +62,4 @@ if( isset($_POST) ){
         header('location: ' . $_SERVER['HTTP_REFERER']);
     }
 }
+
