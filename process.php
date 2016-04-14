@@ -1,6 +1,9 @@
 <?php
 require_once('functions.php');
 
+// To read all new line versions, including \r.
+ini_set("auto_detect_line_endings", true);
+
 if( isset($_POST) ){
     //form validation vars
     $formok = true;
@@ -38,7 +41,7 @@ if( isset($_POST) ){
         if(FALSE === $header) {
             $errors[] = "Error reading first line of input file.";
         } else {
-            $successes[] = "Success reading first line of input file.";
+            $successes[] = "Success reading first line of input file.".json_encode($header);
         }
         
         $writefp = fopen($write_filename, 'w');
