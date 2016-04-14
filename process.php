@@ -14,7 +14,7 @@ if( isset($_POST) ){
     $date = date('Y-m-d');
     $time = date('H-i-s');
     $uploads_dir = __DIR__ . '/files/uploads/';
-    $write_filename = 'files/customer-match-' . $date . '-' . $time . '.csv';
+    $write_filename = 'customer-match-' . $date . '-' . $time . '.csv';
     
     //form data
     $tmp_file = $_FILES['file']['tmp_name'];
@@ -44,7 +44,7 @@ if( isset($_POST) ){
             $successes[] = "Success reading first line of input file.".json_encode($header);
         }
         
-        $writefp = fopen($write_filename, 'w');
+        $writefp = fopen('files/' . $write_filename, 'w');
         
         if(FALSE === $writefp) {
             $errors[] = "Error opening output file.";

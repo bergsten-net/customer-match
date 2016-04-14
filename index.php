@@ -30,7 +30,7 @@ pr($_SESSION, '_SESSION');
                             </ul><?php
                                 } else {
                                     $write_filename = $_SESSION['cf_returndata']['posted_form_data']['write_filename'];
-                                    echo('<a href="' . $write_filename . '">Ladda ner filen ' . $write_filename . '</a><br />');
+                                    echo('<a href="files/' . $write_filename . '">Ladda ner filen ' . $write_filename . '</a><br />');
                                 }
                             } ?>
                             <ul id="errors" class="<?php echo ($sr && !$cf['form_ok']) ? 'visible' : ''; ?>">
