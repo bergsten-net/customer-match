@@ -16,7 +16,7 @@ require_once('./templates/header.php');
                             $cf = array();
                             $sr = false;
 //echo('client_ip: ' . $client_ip . ', server_ip: ' . $server_ip . '<br />');
-pr($_SESSION, '_SESSION');
+//pr($_SESSION, '_SESSION');
                             if(isset($_SESSION['cf_returndata'])){
                                 $cf = $_SESSION['cf_returndata'];
                                 $sr = true;

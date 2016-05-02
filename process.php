@@ -4,7 +4,7 @@ require_once('functions.php');
 // To read all new line versions, including \r.
 ini_set("auto_detect_line_endings", true);
 
-if( isset($_POST) ){
+if( isset($_POST) ) {
     //form validation vars
     $formok = true;
     $errors = array();
@@ -102,7 +102,7 @@ if( isset($_POST) ){
     );
     
     //if this is not an ajax request
-    if(empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest'){
+    if(empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest') {
         //set session variables
         session_start();
         $_SESSION['cf_returndata'] = $returndata;
