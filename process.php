@@ -35,7 +35,7 @@ if( isset($_POST) ) {
     }
 
     if(($readfp = fopen($uploads_dir . $file, 'r')) !== false) {
-        // Get the first row, which contains the column-titles (if necessary)
+        // Get the first row, which contains the column-titles.
         $header = fgetcsv($readfp);
         
         if(FALSE === $header) {
@@ -70,12 +70,7 @@ if( isset($_POST) ) {
             } else {
                 $successes[] = "Success writing '" . $sha256_data . "' to output file, line " . $i . ".";
             }
-
-            // resort/rewrite data and insert into DB here
-            // try to use conditions sparingly here, as those will cause slow-performance
-
-            // I don't know if this is really necessary, but it couldn't harm;
-            // see also: http://php.net/manual/en/features.gc.php
+            
             unset($data);
         }
         
@@ -94,6 +89,7 @@ if( isset($_POST) ) {
             'file' => $file,
             'write_filename' => $write_filename
         ),
+        
         'form_ok' => $formok,
         'errors' => $errors,
         '_POST' => $_POST,
